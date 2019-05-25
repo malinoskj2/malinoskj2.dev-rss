@@ -1,12 +1,16 @@
 language: node_js
 node_js:
-  - stable
+- stable
 cache: npm
 install:
-  - npm install
+- npm install
+- npm run config-creds
 deploy:
   skip_cleanup: true
   provider: script
-  script: scripts/deploy.sh
+  script: npm run deploy
   on:
     branch: master
+before_install:
+- openssl aes-256-cbc -K $encrypted_1913930c5a36_key -iv $encrypted_1913930c5a36_iv
+  -in env.yml.enc -out env.yml -d
