@@ -13,7 +13,7 @@ export const rss = async (event, context) => {
         ttl: process.env.TTL
     });
 
-    const post = await getPosts();
+    const post = await getPosts().catch(handleError);
 
     post.map(post => {
         feed.item({
@@ -25,21 +25,20 @@ export const rss = async (event, context) => {
 
     });
 
-    const xml = feed.xml({ident: true});
     return {
         statusCode: 200,
         headers: {
             'Content-Type': 'application/xml',
         },
-        body: xml,
+	    body: feed.xml({ident: true}),
     };
 
 };
 
 async function getPosts() {
-    const res = await nodeFetch(process.env.POST_ENDPOINT)
-        .catch(e => console.log('failed to fetch posts.'));
-    const posts = await res.json().catch(e => console.log('failed to parse json'));
+    const res = await nodeFetch(process.env.POST_ENDPOINT).catch(handleError);
+
+    const posts = await res.json().catch(handleError);
     return posts.entries.map(post => {
         return {
             ...post,
@@ -50,4 +49,14 @@ async function getPosts() {
 
 const generatePostUrl = (post) => {
     return `https://${process.env.DOMAIN}/#/posts/${post._id}`;
+};
+
+const handleError = (error) => {
+    return {
+        statusCode: 500,
+        headers: {
+            'Content-Type': 'application/json',
+        },
+        body: JSON.stringify('internal server error, unable to generate RSS'),
+    };
 };
