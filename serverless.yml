@@ -22,8 +22,8 @@ provider:
 
 functions:
   hello:
-    handler: handler.hello
+    handler: handler.rss
     events:
       - http:
-          path: hello
+          path: /
           method: get
