@@ -1,5 +1,5 @@
 {
-  "name": "malinoskj2.dev-rss",
+  "name": "rss",
   "version": "0.0.1",
   "description": "RSS feed for malinoskj2.dev",
   "main": "handler.js",

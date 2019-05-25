@@ -1,5 +1,5 @@
 # NOTE: update this with your service name
-service: malinoskj2.dev-rss
+service: rss
 
 # Use the serverless-webpack plugin to transpile ES6
 plugins:
@@ -18,10 +18,10 @@ provider:
   runtime: nodejs8.10
   stage: prod
   region: us-east-1
-  environment: ${file(env.yml):${self:provider.stage}}
+  environment: ${file(env.yml):${self:provider.stage}, env:}
 
 functions:
-  hello:
+  rss:
     handler: handler.rss
     events:
       - http:
