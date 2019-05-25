@@ -1,14 +1,56 @@
-export const hello = async (event, context) => {
+import RSS from 'rss';
+import nodeFetch from 'node-fetch';
+
+export const rss = async (event, context) => {
+  console.log('generating RSS');
+
+  const feed = new RSS({
+    title: process.env.DOMAIN,
+    description: 'a blog about programming',
+    feed_url: process.env.RSS_URL,
+    site_url: process.env.SITE_URL,
+    copyright: `2019 ${process.env.SITE_URL}`,
+    language: 'en',
+    categories: ['programming', 'technology', 'blog'],
+    ttl: '60'
+  });
+
+  const post = await getPosts(); 
+  
+  post.map( post => {
+  	feed.item({
+		id: post._id,
+		title: post.title,
+		description: post.contentquestion
+	});
+  
+  });
+    
+
   return {
+    isBase64Encoded: false,
     statusCode: 200,
-    body: JSON.stringify({
-      message: `Go Serverless v1.0! ${(await message({ time: 1, copy: 'Your function executed successfully!'}))}`,
-    }),
+    headers: {
+	'Content-Type': 'application/rss+xml'
+    },
+    body: feed.xml() 
+   
   };
 };
 
-const message = ({ time, ...rest }) => new Promise((resolve, reject) =>
-  setTimeout(() => {
-    resolve(`${rest.copy} (with a delay)`);
-  }, time * 1000)
-);
+
+async function getPosts() {
+  const res =  await nodeFetch(process.env.POST_ENDPOINT)
+        .catch( e => console.log('failed to fetch posts.'));
+  const posts = await res.json().catch(e => console.log('failed to parse json'));
+  return posts.entries.map( post => {
+    return {
+        ...post,
+        url: generatePostUrl(post)
+    };
+  });
+}
+
+const generatePostUrl = (post) => {
+  return `https://${process.env.DOMAIN}/#/posts/${post._id}`;
+};
