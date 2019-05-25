@@ -3,7 +3,11 @@
   "version": "0.0.1",
   "description": "RSS feed for malinoskj2.dev",
   "main": "handler.js",
-  "scripts": {},
+  "scripts": {
+ 	"deploy" : "sls deploy",
+ 	"config-creds" : "serverless config credentials --provider aws --key $SERVERLESS_KEY --secret $SERVERLESS_SECRET" 
+
+  },
   "license": "MIT",
   "devDependencies": {
     "babel-core": "^6.26.3",
@@ -12,6 +16,7 @@
     "babel-plugin-transform-runtime": "^6.23.0",
     "babel-preset-env": "^1.7.0",
     "babel-preset-stage-3": "^6.24.1",
+    "serverless": "^1.43.0",
     "serverless-domain-manager": "^3.2.2",
     "serverless-offline": "^3.25.6",
     "serverless-webpack": "^5.3.0",
