@@ -3,8 +3,7 @@
   "version": "0.0.1",
   "description": "RSS feed for malinoskj2.dev",
   "main": "handler.js",
-  "scripts": {
-  },
+  "scripts": {},
   "license": "MIT",
   "devDependencies": {
     "babel-core": "^6.26.3",
