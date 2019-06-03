@@ -19,10 +19,10 @@ export const rss = async (event, context) => {
         feed.item({
             guid: post._id,
             title: post.title,
+            description: post.description,
             date: post.publishedAt,
-            url: post.url
+            url: post.url,
         });
-
     });
 
     return {
