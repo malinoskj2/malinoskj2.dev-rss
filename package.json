@@ -4,9 +4,8 @@
   "description": "RSS feed for malinoskj2.dev",
   "main": "handler.js",
   "scripts": {
- 	"deploy" : "sls deploy",
- 	"config-creds" : "serverless config credentials --provider aws --key $SERVERLESS_KEY --secret $SERVERLESS_SECRET" 
-
+    "deploy": "sls deploy",
+    "config-creds": "serverless config credentials --provider aws --key $SERVERLESS_KEY --secret $SERVERLESS_SECRET"
   },
   "license": "MIT",
   "devDependencies": {
@@ -27,6 +26,7 @@
     "babel-runtime": "^6.26.0",
     "node-fetch": "^2.6.0",
     "rss": "^1.2.2",
+    "markdown-it": "^8.4.2",
     "source-map-support": "^0.4.18"
   }
 }

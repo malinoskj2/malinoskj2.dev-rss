@@ -1,7 +1,26 @@
 import RSS from 'rss';
 import nodeFetch from 'node-fetch';
 
+const md = require('markdown-it')({
+    html: true,
+    langPrefix: 'language-',
+    typographer: true,
+});
+
 export const rss = async (event, context) => {
+    const feed = await generateRss().catch(handleError);
+
+    return {
+        statusCode: 200,
+        headers: {
+            'Content-Type': 'application/xml',
+        },
+        body: feed.xml({ident: true}),
+    };
+
+};
+
+async function generateRss() {
 
     const feed = new RSS({
         title: process.env.DOMAIN,
@@ -19,21 +38,14 @@ export const rss = async (event, context) => {
         feed.item({
             guid: post._id,
             title: post.title,
-            description: post.description,
+            description: post.content,
             date: post.publishedAt,
             url: post.url,
         });
     });
 
-    return {
-        statusCode: 200,
-        headers: {
-            'Content-Type': 'application/xml',
-        },
-	    body: feed.xml({ident: true}),
-    };
-
-};
+    return feed;
+}
 
 async function getPosts() {
     const res = await nodeFetch(process.env.POST_ENDPOINT).catch(handleError);
@@ -42,7 +54,8 @@ async function getPosts() {
     return posts.entries.map(post => {
         return {
             ...post,
-            url: generatePostUrl(post)
+            url: generatePostUrl(post),
+            content: md.render(post.content)
         };
     });
 }
